@@ -13,9 +13,6 @@ public interface ProjectService extends IService<Project> {
 
     //搜素代码
 
-    //GPT接口
-    void chat();
-
 
     Project testGetById(Integer id);
 

@@ -26,23 +26,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Autowired
     private ProjectMapper projectMapper;
 
-//    @Autowired
-//    private FunctionESDao functionESDao;
-
-
-//    @Autowired
-//    public FunctionESDao funtionEsDao(FunctionESDao functionESDao){
-//        this.functionESDao = functionESDao;
-//    }
-
-//    @Autowired
-//    private Elasticsearch elasticsearch;
-
-
-    @Override
-    public void chat() {
-
-    }
 
     @Override
     public Project testGetById(Integer id) {

@@ -4,19 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gift.domain.Project;
+import com.gift.domain.Repository;
 import com.gift.domain.Result;
 import com.gift.domain.Vo.FunctionVo;
 import com.gift.service.ChatService;
 import com.gift.service.ProjectService;
-import com.gift.service.impl.ChatServiceImpl;
+import com.gift.service.RepositoryService;
+import com.gift.service.impl.RepositoryServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api")
@@ -28,6 +28,9 @@ public class ProjectController {
 
     @Autowired
     private ChatService chatService;
+
+    @Autowired
+    private RepositoryService repositoryService;
 
     //测试
     @GetMapping("/{id}")
@@ -45,13 +48,22 @@ public class ProjectController {
         return new Result();
     }
 
-    //TODO 根据字符串(name？repoId？)来搜索项目列表，返回一个项目列表 Project
-    @GetMapping("/project/{keys}")
-    public Result searchProject(@PathVariable String keys){
-        return new Result();
+    //TODO 根据字符串(name？repoId？)来搜索项目列表，返回一个仓库列表 Repository
+    @GetMapping("/project")
+    public Result searchProject(@RequestParam String text){
+        Boolean flag = true;
+        log.info("你输入的仓库搜索词为：",text);
+        List<Repository> repositories = repositoryService.SearchRepository(text);
+        int size = repositories.size();
+
+        if (repositories == null || size == 0){
+            flag = false;
+        }
+
+        return new Result(flag,repositories);
     }
 
-    //TODO 根据搜索词项目列表 返回代码列表对象 Funtion
+    //TODO 根据搜索词项目列表 返回代码列表对象 FuntionVo
     @GetMapping("/code")
     public Result searchCode(@RequestParam String keys){
         Boolean flag = true;
@@ -99,6 +111,18 @@ public class ProjectController {
 
 //        chatService.chat(question).forEach(System.out::println);
         return answer;
+    }
+
+
+    /**
+     * 添加ES索引
+     * @param index
+     * @return
+     */
+    @GetMapping("/test")
+    public Result testIndex(@RequestParam String index){
+        repositoryService.testIndex(index);
+        return new Result(true,"成功建立索引");
     }
 
 
