@@ -1,0 +1,21 @@
+name: Continuous Integration
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK and Scala
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '8'
+          scala-version: '2.12.0'
+
+      - name: Maven check
+        run: mvn clean verify
